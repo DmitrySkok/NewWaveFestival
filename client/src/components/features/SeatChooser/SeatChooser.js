@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Progress, Alert } from 'reactstrap';
+import { addSeat } from '../../../redux/seatsRedux';
 
 import './SeatChooser.scss';
 
@@ -7,7 +8,11 @@ class SeatChooser extends React.Component {
   
   componentDidMount() {
     const { loadSeats } = this.props;
+    this.interval = setInterval(() => loadSeats(), 20000);
     loadSeats();
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   isTaken = (seatId) => {
@@ -17,12 +22,12 @@ class SeatChooser extends React.Component {
   }
 
   prepareSeat = (seatId) => {
-    const { chosenSeat, updateSeat } = this.props;
+    const { chosenSeat, addSeat } = this.props;
     const { isTaken } = this;
 
     if(seatId === chosenSeat) return <Button key={seatId} className="seats__seat" color="primary">{seatId}</Button>;
     else if(isTaken(seatId)) return <Button key={seatId} className="seats__seat" disabled color="secondary">{seatId}</Button>;
-    else return <Button key={seatId} color="primary" className="seats__seat" outline onClick={(e) => updateSeat(e, seatId)}>{seatId}</Button>;
+    else return <Button key={seatId} color="primary" className="seats__seat" outline onClick={() => addSeat(seatId)}>{seatId}</Button>;
   }
 
   render() {

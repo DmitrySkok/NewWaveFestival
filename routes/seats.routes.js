@@ -24,7 +24,11 @@ router.route('/seats/:id').get((req, res) => {
 
 router.route('/seats').post((req, res) => {
   const { day, seat, client, email } = req.body;
-  if(day && seat && client && email ) {
+  const isTaken = seats.find(seatData => seatData.seat === seat);
+  if (isTaken) { 
+   return res.send({ message: 'This seat this seat is already taken' });
+  }
+  if(seat) {
     const newSeat = {
       id: uuidv4(),
       day: day,
@@ -55,12 +59,9 @@ router.route('/seats/:id').put((req, res) => {
 });
 
 router.route('/seats/:id').delete((req, res) => {
-  const seat = seats.find(seat => seat.id == req.params.id);
-  if (seat) {
-    const props = Object.getOwnPropertyNames(seat);
-    for (let i = 0; i < props.length; i++) {
-      delete seat[props[i]];
-    }
+  const index = seats.findIndex(seat => seat.id == req.params.id);
+  if (index) {
+    seats.splice(index, 1);
     res.send({ message: 'OK' });
   } else {
     res.send({ message: 'ERROR' });
