@@ -37,7 +37,6 @@ router.route('/seats').post((req, res) => {
       email: email
     }
     seats.push(newSeat);
-    console.log(newSeat);
     req.io.emit('seatsUpdated', seats);
     res.send({ message: 'OK' })
   }
