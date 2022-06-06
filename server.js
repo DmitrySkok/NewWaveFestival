@@ -47,7 +47,7 @@ app.get('*', (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).send('<h1>404 not found...</h1>');
+  res.status(404).json({ message: 'Not found...' });
 })
 
 io.on('connection', (socket) => {
