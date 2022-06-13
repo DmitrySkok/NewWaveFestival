@@ -1,4 +1,5 @@
 const Concerts  = require('../models/concerts.model');
+const sanitize = require('mongo-sanitize');
 
 exports.getAll = async (req, res) => {
   try {
@@ -35,7 +36,7 @@ exports.getById = async (req, res) => {
 
 exports.postNewConcert = async (req, res) => { 
   try {
-    const { performer, genre, price, day, image } = req.body;
+    const { performer, genre, price, day, image } = sanitize(req.body);
     const newConcert = new Concerts({ day: day, performer: performer,  genre: genre, image: image, price: price});
     await newConcert.save();
     res.status(200).json(newConcert);
@@ -45,7 +46,7 @@ exports.postNewConcert = async (req, res) => {
 };
 
 exports.putConcert = async (req, res) => { 
-  const { performer, genre, price, day, image } = req.body;
+  const { performer, genre, price, day, image } = sanitize(req.body);
   try {
     const updConcert = await Concerts.findById(req.params.id);
     if(updConcert) {
